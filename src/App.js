@@ -1,6 +1,6 @@
 import './App.css';
 import SortingVisualizer from './SortingVisualizer/SortingVisualizer'
-import SideBar from './sideBar/sideBar'
+import SideBar from './SideBar/SideBar'
 
 
 function App() {
