@@ -1,12 +1,13 @@
 .array-container {
     position: absolute;
-    left: 100px;
+    left: 20%;
+    right: 10%;
     top: 100px;
   }
   
   .array-bar {
     width: 30px;
-    display: inline-block;
-    margin: 0 1px;
+    display: inline-block; /* arranges the array bars in horizontal way*/
+    margin: 0 2px; /*Top,Bottom -> 0px Left,Right -> 1px*/
     vertical-align:bottom
   }
