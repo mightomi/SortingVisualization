@@ -1,7 +1,7 @@
 import React from 'react';
 import './SortingVisualizer.css';
 
-
+const SPEED_OF_ANIMATION = 80;
 const NUMBER_OF_ARRAY_BARS = 30;
 const PRIMARY_COLOR = 'pink';
 const COMPARE_COLOR = 'yellow';
@@ -25,7 +25,6 @@ export default class SortingVisualizer extends React.Component {
     
     resetArray() {
         function randomIntFromInterval(min, max) {
-            // min and max included
             return Math.floor(Math.random() * (max - min + 1) + min);
         }
 
@@ -38,20 +37,47 @@ export default class SortingVisualizer extends React.Component {
     }
 
 
-    // swaps on the main div array i.e arrayBars.
+
+    // swaps the bars on the main div array i.e arrayBars.
     swapDiv(divIdx1, divIdx2) {
         // basically just swap the height style
         var arrayBars = document.getElementsByClassName('array-bar');
 
         let tempHeight = arrayBars[divIdx2].style.height;
-        // // console.log(temp);
         arrayBars[divIdx2].style.height = arrayBars[divIdx1].style.height;
         arrayBars[divIdx1].style.height = tempHeight;
     }
 
-    bubbleSort() {
+    async animateSwaps(animations) {
 
         var arrayBars = document.getElementsByClassName('array-bar');
+        let lastIdx1 = 0, lastIdx2=0;
+
+        for(let i=0; i<animations.length; i++) {
+
+            let divIdx1 = animations[i][0];
+            let divIdx2 = animations[i][1];
+            // console.log(divIdx1, divIdx2);
+
+            // change back the color to primary_color for the swapped last elements
+            arrayBars[lastIdx1].style.backgroundColor = PRIMARY_COLOR;
+            arrayBars[lastIdx2].style.backgroundColor = PRIMARY_COLOR;
+            // update the last index
+            lastIdx1 = divIdx1;
+            lastIdx2 = divIdx2;
+
+            // change the color of the element getting swapped to swap_color
+            arrayBars[divIdx1].style.backgroundColor = SWAP_COLOR;
+            arrayBars[divIdx2].style.backgroundColor = SWAP_COLOR;
+
+            this.swapDiv(divIdx1, divIdx2);
+
+            await new Promise(resolve => setTimeout(resolve, SPEED_OF_ANIMATION));
+        }
+    }
+
+    bubbleSort() {
+
         let arrayTemp = this.state.array;
         let animations = [];
         
@@ -65,33 +91,8 @@ export default class SortingVisualizer extends React.Component {
             }
         }
 
-        console.log(arrayBars);
-        console.log(animations);
-
-        let lastIdx1 = null, lastIdx2=null;
-
-        for(let i=0; i<animations.length; i++) {
-
-            setTimeout(() => {
-                let divIdx1 = animations[i][0];
-                let divIdx2 = animations[i][1];
-                // console.log(divIdx1, divIdx2);
-
-                if(lastIdx1 !== null) {
-                    arrayBars[lastIdx1].style.backgroundColor = PRIMARY_COLOR;
-                    arrayBars[lastIdx2].style.backgroundColor = PRIMARY_COLOR;
-                }
-                lastIdx1 = divIdx1;
-                lastIdx2 = divIdx2; 
-
-                arrayBars[divIdx1].style.backgroundColor = SWAP_COLOR;
-                arrayBars[divIdx2].style.backgroundColor = SWAP_COLOR;
-
-                this.swapDiv(divIdx1, divIdx2);
-              }, i * 80);
-        }
-        
-        // console.log(arrayBars);
+        // console.log(animations);
+        this.animateSwaps(animations);
     }
 
     
