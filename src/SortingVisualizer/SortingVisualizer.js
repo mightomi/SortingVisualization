@@ -2,7 +2,7 @@ import React from 'react';
 import './SortingVisualizer.css';
 
 const SPEED_OF_ANIMATION = 80;
-const NUMBER_OF_ARRAY_BARS = 30;
+const NUMBER_OF_ARRAY_BARS = 80;
 const PRIMARY_COLOR = 'pink';
 const COMPARE_COLOR = 'yellow';
 const SWAP_COLOR = 'red';
@@ -76,8 +76,8 @@ export default class SortingVisualizer extends React.Component {
         }
     }
 
-    bubbleSort() {
 
+    bubbleSort() {
         let arrayTemp = this.state.array;
         let animations = [];
         
@@ -95,7 +95,75 @@ export default class SortingVisualizer extends React.Component {
         this.animateSwaps(animations);
     }
 
+    quickSort() {
+        let arrayTemp = this.state.array; // used as a global variable in quickSortHelper and  quickSortPartition
+        let animations = [];
+
+        function quickSortPartition(start, end) {
+
+            let originalStart = start, originalEnd = end;;
+
+            // console.log(typeof(start), typeof(end));
+            
+            // let chk = 0;
+            if(start<0 || end>=arrayTemp.length || start >= end) {
+                return -1;
+            }
+            console.log(start, end);
+
+            // if(chk == 1)    return;
+
+            console.log('array', arrayTemp);
+
+            let pivotIdx = end;
+            let pivot = arrayTemp[end];
+            end--;
+
+            while(true) {
+                while(arrayTemp[start] < pivot && start<end)    start++;
+                while(arrayTemp[end] >= pivot && start<end)       end--;
+
+                if(start == end)
+                    break;
+                else {
+                    [arrayTemp[start], arrayTemp[end]] = [arrayTemp[end], arrayTemp[start]];
+                    animations.push([start, end]);
+                    // start++;
+                    // end--;
+                }
+            }
+
+            // swap the pivot with the current end //end+1 == pivotIdx && 
+            if(!(arrayTemp[pivotIdx]>arrayTemp[end] )) {
+                [arrayTemp[end], arrayTemp[pivotIdx]] = [arrayTemp[pivotIdx], arrayTemp[end]];
+                animations.push([end, pivotIdx]);
+            }
+
+            // after swaping the element at end is the pivot
+            let newPivotIdx = end;
+            // console.log('pivot ', newPivotIdx);
+
+            // console.log('partiton at', pivot)
+            // console.log('new array', arrayTemp);
+            // console.log('1. ', originalStart, newPivotIdx-1);
+            // console.log('2. ', newPivotIdx+1, originalEnd);
+            // console.log("\n\n\n");
+
+            quickSortPartition(originalStart, newPivotIdx-1);
+            quickSortPartition(newPivotIdx+1, originalEnd);
+        }
+        function quickSortHelper() {
+            // console.log('before', arrayTemp);
+            quickSortPartition(0, arrayTemp.length-1);
+            // console.log('after', arrayTemp);
+        }
+
+        quickSortHelper();
+        this.animateSwaps(animations);
+    }
     
+
+
     render() {
 
         const { array } = this.state;
@@ -116,6 +184,7 @@ export default class SortingVisualizer extends React.Component {
             <div>
                 <button onClick={() => this.resetArray()}>Generate New Array</button>
                 <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
+                <button onClick={() => this.quickSort()}>Quick Sort</button>
             </div>
             </>
         )
