@@ -1,7 +1,7 @@
 import React from 'react';
 import './SortingVisualizer.css';
 
-const SPEED_OF_ANIMATION = 80;
+const SPEED_OF_ANIMATION = 50;
 const NUMBER_OF_ARRAY_BARS = 80;
 const PRIMARY_COLOR = 'pink';
 const COMPARE_COLOR = 'yellow';
@@ -51,7 +51,6 @@ export default class SortingVisualizer extends React.Component {
     async animateSwaps(animations) {
 
         var arrayBars = document.getElementsByClassName('array-bar');
-        let lastIdx1 = 0, lastIdx2=0;
 
         for(let i=0; i<animations.length; i++) {
 
@@ -59,20 +58,18 @@ export default class SortingVisualizer extends React.Component {
             let divIdx2 = animations[i][1];
             // console.log(divIdx1, divIdx2);
 
-            // change back the color to primary_color for the swapped last elements
-            arrayBars[lastIdx1].style.backgroundColor = PRIMARY_COLOR;
-            arrayBars[lastIdx2].style.backgroundColor = PRIMARY_COLOR;
-            // update the last index
-            lastIdx1 = divIdx1;
-            lastIdx2 = divIdx2;
-
             // change the color of the element getting swapped to swap_color
             arrayBars[divIdx1].style.backgroundColor = SWAP_COLOR;
             arrayBars[divIdx2].style.backgroundColor = SWAP_COLOR;
 
             this.swapDiv(divIdx1, divIdx2);
 
+            // wait for a few milisecond
             await new Promise(resolve => setTimeout(resolve, SPEED_OF_ANIMATION));
+
+            // change back the color of the element got swapped to PRIMARY_COLOR
+            arrayBars[divIdx1].style.backgroundColor = PRIMARY_COLOR;
+            arrayBars[divIdx2].style.backgroundColor = PRIMARY_COLOR;
         }
     }
 
